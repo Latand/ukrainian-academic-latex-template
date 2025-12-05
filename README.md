@@ -2,17 +2,23 @@
 
 LaTeX template for Ukrainian academic documents with Claude Code integration.
 
+> **Important**: This template requires **LuaLaTeX** (not pdfLaTeX). The build commands handle this automatically.
+
 ## Quick Start
 
 ### Option 1: Docker (no install needed)
 ```bash
-just docker-build
+just docker-run   # fast, mounts project
+# or
+just docker-build # slower, rebuilds image
 ```
 
 ### Option 2: Local LaTeX
 ```bash
-# Install LaTeX + Just, then:
+# Install LaTeX, then:
 just build
+# or without Just:
+latexmk -lualatex -f main.tex
 ```
 
 ## Installation
@@ -93,16 +99,20 @@ winget install Casey.Just
 
 With Just:
 ```
-just build        - Compile to PDF
-just docker-build - Compile in Docker
+just build        - Compile to PDF (local LaTeX)
+just docker-run   - Compile in Docker (fast, mounts project)
+just docker-build - Compile in Docker (rebuilds image)
 just clean        - Remove build artifacts
-just view         - Build and open
+just view         - Build and open PDF
+just watch        - Auto-rebuild on changes
 ```
 
 Without Just:
 ```bash
 latexmk -lualatex -f main.tex && mkdir -p pdf && mv main.pdf pdf/
 ```
+
+> **Note**: Run build twice if bibliography changes don't appear (latexmk usually handles this automatically).
 
 ## Project Structure
 

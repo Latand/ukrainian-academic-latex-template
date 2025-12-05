@@ -1,6 +1,8 @@
 #!/bin/bash
 # Ukrainian Academic LaTeX Template - Setup
-# Installs: Bun, Claude Code, TeX Live, Just
+#
+# This script installs Bun and Claude Code automatically.
+# LaTeX and Just require sudo, so we only print instructions.
 
 set -e
 
@@ -24,50 +26,63 @@ else
     OS="unknown"
 fi
 
-echo "OS: $OS"
+echo "Detected: $OS"
 echo ""
 
-# 1. Bun
-echo "[1/3] Bun..."
+# === AUTOMATIC: Bun ===
+echo "[1/2] Installing Bun..."
 if command -v bun &> /dev/null; then
-    echo "  ✓ installed"
+    echo "  Already installed: $(bun --version)"
 else
     curl -fsSL https://bun.sh/install | bash
     export BUN_INSTALL="$HOME/.bun"
     export PATH="$BUN_INSTALL/bin:$PATH"
-    echo "  ✓ installed"
+    echo "  Installed successfully"
 fi
+echo ""
 
-# 2. Claude Code
-echo "[2/3] Claude Code..."
+# === AUTOMATIC: Claude Code ===
+echo "[2/2] Installing Claude Code..."
 if command -v claude &> /dev/null; then
-    echo "  ✓ installed"
+    echo "  Already installed"
 else
     ~/.bun/bin/bun install -g @anthropic-ai/claude-code
-    echo "  ✓ installed"
+    echo "  Installed successfully"
 fi
+echo ""
 
-# 3. LaTeX + Just
-echo "[3/3] LaTeX + Just..."
+# === MANUAL: LaTeX + Just ===
+echo "=== Manual steps required ==="
+echo ""
+echo "Install LaTeX and Just (requires sudo):"
+echo ""
+
 case $OS in
     debian)
-        echo "  Run: sudo apt install texlive-full just"
+        echo "  sudo apt install texlive-full"
+        echo "  sudo apt install just  # optional"
         ;;
     arch)
-        echo "  Run: sudo pacman -S texlive-full just"
+        echo "  sudo pacman -S texlive-full"
+        echo "  sudo pacman -S just  # optional"
         ;;
     fedora)
-        echo "  Run: sudo dnf install texlive-scheme-full just"
+        echo "  sudo dnf install texlive-scheme-full"
+        echo "  sudo dnf install just  # optional"
         ;;
     macos)
-        echo "  Run: brew install --cask mactex && brew install just"
+        echo "  brew install --cask mactex"
+        echo "  brew install just  # optional"
         ;;
     *)
-        echo "  Install TeX Live: https://tug.org/texlive/"
-        echo "  Install Just: https://just.systems/"
+        echo "  TeX Live: https://tug.org/texlive/"
+        echo "  Just: https://just.systems/"
         ;;
 esac
 
 echo ""
 echo "=== Done ==="
-echo "Restart terminal, then: just build"
+echo ""
+echo "After installing LaTeX, restart terminal and run:"
+echo "  just build        # if Just installed"
+echo "  latexmk -lualatex -f main.tex  # without Just"

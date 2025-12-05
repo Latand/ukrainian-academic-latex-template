@@ -1,17 +1,14 @@
-\RequirePackage{xparse}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ukrainian Academic Document Class
-% Template for essays, reports, and dissertations
 % Version 1.0 (2025)
 %
-% Features:
-% - Ukrainian language support (via fontspec + polyglossia)
-% - Times New Roman font, 14pt base size
-% - 1.5 line spacing
-% - Margins per Ukrainian standards (25mm all sides)
-% - Chapter/section formatting for academic documents
+% Requirements: LuaLaTeX only (not pdfLaTeX)
 %
-% Requirements: LuaLaTeX, Times New Roman font
+% Features:
+% - Ukrainian language support (polyglossia + fontspec)
+% - Times New Roman / Liberation Serif, 14pt base
+% - 1.5 line spacing
+% - Margins: left/right 25mm, top/bottom 20mm
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % === CLASS DEFINITION ===
@@ -46,14 +43,27 @@
 \ProcessOptions\relax
 \LoadClass{\baseclass}
 
-% === FONTS ===
-% Uses Times New Roman or Liberation Serif (free alternative)
-% Liberation Serif is used in CI/Docker environments
+% === FONTS AND LANGUAGE ===
+% Uses Times New Roman or Liberation Serif (free alternative for CI/Docker)
 \RequirePackage{fontspec}
+\RequirePackage{polyglossia}
+\setdefaultlanguage{ukrainian}
+\setotherlanguage{english}
+
 \IfFontExistsTF{Times New Roman}{
     \setmainfont{Times New Roman}
+    \setsansfont{Times New Roman}
+    \setmonofont{Courier New}[Scale=0.9]
+    \newfontfamily\cyrillicfont{Times New Roman}
+    \newfontfamily\cyrillicfontsf{Times New Roman}
+    \newfontfamily\cyrillicfonttt{Courier New}[Scale=0.9]
 }{
     \setmainfont{Liberation Serif}
+    \setsansfont{Liberation Sans}
+    \setmonofont{Liberation Mono}[Scale=0.9]
+    \newfontfamily\cyrillicfont{Liberation Serif}
+    \newfontfamily\cyrillicfontsf{Liberation Sans}
+    \newfontfamily\cyrillicfonttt{Liberation Mono}[Scale=0.9]
 }
 
 % === LINE SPACING ===
@@ -76,55 +86,24 @@
 \renewcommand{\huge}{\fontsize{24}{30}\selectfont}
 \renewcommand{\Huge}{\fontsize{28}{35}\selectfont}
 
-% === CHAPTER FORMATTING ===
-% Customize chapter title appearance
-\ProvideDocumentCommand{\abovechapterskip}{}{\vspace*{0pt}}
-\ProvideDocumentCommand{\chapterbelowskip}{}{\vspace{24pt}}
-\ProvideDocumentCommand{\chapterinbetweenskip}{}{}
-\ProvideDocumentCommand{\autodot}{}{}
-\ProvideDocumentCommand{\mdtChapapp}{}{}
-\ProvideDocumentCommand{\chapteralign}{}{\centering}
-\ProvideDocumentCommand{\chapterfont}{}{\Large\bfseries}
-\ProvideDocumentCommand{\sectionfont}{}{\large\bfseries}
+% === CHAPTER AND SECTION FORMATTING ===
+% Using titlesec for consistent formatting
+\RequirePackage{titlesec}
 
-% === SECTION FORMATTING ===
-\makeatletter
-\def\section{\@startsection{section}{1}{\z@}{3.5ex \@plus 1ex \@minus .2ex}{2.3ex \@plus.2ex}{\sectionfont}}
-\def\subsection{\@startsection{subsection}{2}{\z@}{3.25ex\@plus 1ex \@minus .2ex}{1.5ex \@plus .2ex}{\normalfont\large\bfseries}}
-\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{3.25ex\@plus 1ex \@minus .2ex}{1.5ex \@plus .2ex}{\normalfont\normalsize\bfseries}}
+% Chapter: "РОЗДІЛ 1. НАЗВА" centered, uppercase
+\titleformat{\chapter}{\Large\bfseries\centering}
+  {\MakeUppercase{РОЗДІЛ~\thechapter.}}{1em}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{0.5\baselineskip}
 
-\ProvideDocumentCommand{\chapterprefixfont}{}{\Large\bfseries}
-\DeclareDocumentCommand{\@makechapterhead}{ m }{%
-	\abovechapterskip
-	{\parindent \z@ \chapteralign \normalfont
-		\ifnum \c@secnumdepth >\m@ne
-		\if@mainmatter
-		\ifbool{chapteroneline}{%
-			\chapterfont \mdtChapapp\thechapter\autodot\enspace
-		}{%
-			\chapterprefixfont \@chapapp\space \thechapter
-			\par\nobreak
-			\chapterinbetweenskip
-		}%
-		\fi
-		\fi
-		\interlinepenalty\@M%
-		\chapterfont #1\par\nobreak
-		\chapterbelowskip
-	}
-	\thispagestyle{\chapter@p@gestyle}
-}
-\def\@makeschapterhead#1{%
-	\abovechapterskip
-	{\parindent \z@ \chapteralign
-		\normalfont
-		\interlinepenalty\@M
-		\chapterfont  #1\par\nobreak
-		\chapterbelowskip
-	}
-	\thispagestyle{\chapter@p@gestyle}
-}
-\makeatother
+% Sections
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{0.5\baselineskip}{0.25\baselineskip}
+
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{0.5\baselineskip}{0.25\baselineskip}
 
 % === NUMBERING ===
 % Equations, tables, figures numbered per chapter (e.g., 1.1, 1.2, 2.1)
@@ -241,7 +220,7 @@
 \captionsetup[figure]{position=bottom}
 
 % === DOCUMENT METADATA COMMANDS ===
-% Use these in your main.tex to set document information
+% Core metadata (used in titlepage and PDF)
 \NewDocumentCommand{\thesistitle} { o m }{%
  \IfValueTF{#1}{\def\shorttitle{#1}}{\def\shorttitle{#2}}%
  \def\@title{#2}%
@@ -250,16 +229,10 @@
 \makeatletter
 \DeclareDocumentCommand{\author}{m}{\newcommand{\authorname}{#1}\renewcommand{\@author}{#1}}
 \NewDocumentCommand{\supervisor}{m}{\newcommand{\supname}{#1}}
-\NewDocumentCommand{\examiner}{m}{\newcommand{\examname}{#1}}
-\NewDocumentCommand{\degree}{m}{\newcommand{\degreename}{#1}}
-\NewDocumentCommand{\specialty}{m}{\newcommand{\specialtyname}{#1}}
-\NewDocumentCommand{\field}{m}{\newcommand{\fieldname}{#1}}
-\NewDocumentCommand{\addresses}{m}{\newcommand{\addressname}{#1}}
 \NewDocumentCommand{\university}{m}{\newcommand{\univname}{#1}}
-\NewDocumentCommand{\department}{m}{\newcommand{\deptname}{#1}}
-\NewDocumentCommand{\group}{m}{\newcommand{\groupname}{#1}}
 \NewDocumentCommand{\faculty}{m}{\newcommand{\facname}{#1}}
-\NewDocumentCommand{\subject}{m}{\newcommand{\subjectname}{#1}}
+\NewDocumentCommand{\department}{m}{\newcommand{\deptname}{#1}}
+\NewDocumentCommand{\specialty}{m}{\newcommand{\specialtyname}{#1}}
 \NewDocumentCommand{\keywords}{m}{\newcommand{\keywordnames}{#1}}
 \NewDocumentCommand{\keywordseng}{m}{\newcommand{\keywordnameseng}{#1}}
 \makeatother
@@ -317,8 +290,7 @@
 \colorlet{mdtRed}{red!50!black}
 
 % === MARGINS ===
-% Ukrainian standard: 25mm on all sides
-% Modify these values to change page margins
+% Ukrainian standard: left/right 25mm, top/bottom 20mm
 \RequirePackage{geometry}
 \geometry{
     left=25mm,
@@ -385,24 +357,18 @@ KOMA-script documentation for details.}]{fancyhdr}
 % === HYPERLINKS ===
 \ifbool{hyperrefsupport}{%
 \AtEndPreamble{\RequirePackage{hyperref}
-\hypersetup{pdfpagemode={UseOutlines},
-bookmarksopen=true,
-bookmarksopenlevel=0,
-hypertexnames=false,
-colorlinks=false,
-citecolor=blue,
-linkcolor=black,
-urlcolor=mdtRed,
-pdfstartview={FitV},
-unicode,
-breaklinks=true,
+\hypersetup{
+    pdfpagemode={UseOutlines},
+    bookmarksopen=true,
+    bookmarksopenlevel=0,
+    hypertexnames=false,
+    hidelinks,
+    pdfstartview={FitV},
+    unicode,
+    breaklinks=true,
 }
-
-\pdfstringdefDisableCommands{%
-	\let\\\space%
+\pdfstringdefDisableCommands{\let\\\space}
 }
-	}
-}{%nothing
-}
+}{}
 
 \endinput

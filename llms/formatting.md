@@ -1,7 +1,7 @@
 # LaTeX Formatting Reference
 
 ## Margins
-`UkrainianAcademic.cls` around line 280:
+`UkrainianAcademic.cls` (MARGINS section):
 ```latex
 \geometry{
     left=25mm,
@@ -12,22 +12,26 @@
 ```
 
 ## Font Sizes
-`UkrainianAcademic.cls` lines 58-70:
+`UkrainianAcademic.cls` (FONT SIZES section):
 ```latex
 \renewcommand{\normalsize}{\fontsize{14}{18}\selectfont}
 \renewcommand{\large}{\fontsize{16}{20}\selectfont}
 ```
 
 ## Line Spacing
-`UkrainianAcademic.cls` line 55:
+`UkrainianAcademic.cls` (LINE SPACING section):
 ```latex
 \onehalfspacing   % 1.5 spacing
 % or \doublespacing, \singlespacing
 ```
 
-## Chapter Title Format
-`main.tex` lines 35-37:
+## Chapter/Section Formatting
+`UkrainianAcademic.cls` (CHAPTER AND SECTION FORMATTING section):
 ```latex
+% Chapter: "РОЗДІЛ 1. НАЗВА" centered, uppercase
 \titleformat{\chapter}{\Large\bfseries\centering}
   {\MakeUppercase{РОЗДІЛ~\thechapter.}}{1em}{\MakeUppercase}
+
+% Section
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
 ```

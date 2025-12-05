@@ -1,14 +1,12 @@
 % ===============================================================
 %  Ukrainian Academic Document Template
-%  Compile with: lualatex + biber
+%  Compile with: lualatex + biber (NOT pdflatex)
 % ===============================================================
 
 \documentclass[
   12pt,
   oneside,
-  headsepline,
-  onehalfspacing,
-  chapterinoneline
+  headsepline
 ]{UkrainianAcademic}
 
 % === CONFIGURE YOUR DOCUMENT HERE ===
@@ -22,17 +20,6 @@
 \keywords{ключове слово 1, ключове слово 2, ключове слово 3}
 \keywordseng{keyword 1, keyword 2, keyword 3}
 % =====================================
-
-% === LANGUAGE SUPPORT ===
-\usepackage{polyglossia}
-\setdefaultlanguage{ukrainian}
-\setotherlanguage{english}
-% Cyrillic font: Times New Roman or Liberation Serif (CI/Docker)
-\IfFontExistsTF{Times New Roman}{
-    \newfontfamily\cyrillicfonttt{Times New Roman}[Script=Cyrillic]
-}{
-    \newfontfamily\cyrillicfonttt{Liberation Serif}[Script=Cyrillic]
-}
 
 % === TYPOGRAPHY ===
 \usepackage{microtype}
@@ -48,22 +35,12 @@
 \usepackage{enumitem}
 \setlist{nosep, leftmargin=1.25cm}
 
-% === CHAPTER FORMATTING ===
-\usepackage{titlesec}
-\titleformat{\chapter}{\Large\bfseries\centering}
-  {\MakeUppercase{РОЗДІЛ~\thechapter.}}{1em}{\MakeUppercase}
-\titlespacing*{\chapter}{0pt}{0pt}{0.5\baselineskip}
-\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
-\titlespacing*{\section}{0pt}{0.5\baselineskip}{0.5\baselineskip}
-
 % === TEXT QUALITY ===
 \tolerance=1000
 \hbadness=10000
 \vbadness=10000
 \hyphenpenalty=50
 \exhyphenpenalty=50
-\doublehyphendemerits=10000
-\finalhyphendemerits=5000
 
 % === BIBLIOGRAPHY ===
 \usepackage[
@@ -75,22 +52,18 @@
 ]{biblatex}
 \addbibresource{refs.bib}
 
-% Ukrainian bibliography strings
-\DeclareFieldFormat{url}{\bibstring{url}\addcolon\space\url{#1}}
-\DeclareFieldFormat{doi}{DOI:\space\url{https://doi.org/#1}}
 \DefineBibliographyStrings{ukrainian}{
   url={URL},
   and={та},
 }
 
 % === PDF METADATA ===
-\usepackage{hyperref}
-\hypersetup{
-  pdftitle={\ttitle},
-  pdfauthor={\authorname},
-  pdfsubject={},
-  pdfkeywords={\keywordnames},
-  hidelinks
+\AtBeginDocument{%
+  \hypersetup{
+    pdftitle={\ttitle},
+    pdfauthor={\authorname},
+    pdfkeywords={\keywordnames},
+  }%
 }
 
 % ===============================================================

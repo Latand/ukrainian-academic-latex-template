@@ -32,16 +32,22 @@ watch:
 # Build and open
 view: build open
 
-# Build in Docker (no local LaTeX needed)
+# Build in Docker (rebuilds image each time - use for CI)
 docker-build:
     docker build -t ukrainian-latex .
     docker run --rm -v "$(pwd)/pdf:/output" ukrainian-latex
+
+# Run in Docker (mounts project - use for iterative writing)
+docker-run:
+    docker run --rm -v "$(pwd):/doc" -w /doc texlive/texlive:latest \
+        sh -c "apt-get update && apt-get install -y fonts-liberation && latexmk -lualatex -f main.tex && mkdir -p pdf && mv main.pdf pdf/"
 
 # Show available commands
 help:
     @echo "Commands:"
     @echo "  just build        - Compile LaTeX to PDF"
-    @echo "  just docker-build - Build in Docker (no local LaTeX)"
+    @echo "  just docker-build - Build in Docker (rebuilds image)"
+    @echo "  just docker-run   - Build in Docker (faster, mounts project)"
     @echo "  just clean        - Remove build artifacts"
     @echo "  just open         - Open PDF in viewer"
     @echo "  just watch        - Auto-rebuild on changes"
