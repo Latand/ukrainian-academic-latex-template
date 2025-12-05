@@ -87,7 +87,7 @@ jobs:
           $env:PATH = "C:\Program Files\MiKTeX\miktex\bin\x64;" + $env:PATH
           latexmk -lualatex -f main.tex
           New-Item -ItemType Directory -Force -Path pdf
-          Move-Item main.pdf pdf/
+          Move-Item -Force main.pdf pdf/
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
