@@ -85,12 +85,15 @@ just build
 
 | Command | Description |
 |---------|-------------|
-| `just build` | Compile to PDF |
-| `just docx` | Convert to Word (.docx) |
+| `just build` | Compile to PDF (recommended) |
+| `just docx` | Convert to Word via Pandoc (basic, loses formatting) |
+| `just docx-libreoffice` | Convert PDF to Word via LibreOffice (better quality) |
 | `just clean` | Remove build artifacts |
 | `just open` | Open PDF in viewer |
 | `just watch` | Auto-rebuild on changes |
 | `just view` | Build and open |
+
+> **Note:** DOCX conversion has limitations. Pandoc does shallow LaTeX parsing and loses complex formatting. For best results, use PDF as primary output. If you need DOCX, use `just docx-libreoffice` or online PDF converters.
 
 ## File Structure
 
@@ -202,9 +205,11 @@ Cite in text: `\cite{mybook}`
 **Bibliography not appearing**
 - Run `just build` twice
 
-**DOCX conversion issues**
-- Ensure Pandoc is installed: `pandoc --version`
-- Complex LaTeX may need manual cleanup
+**DOCX conversion looks bad**
+- Pandoc cannot handle complex LaTeX formatting
+- Use `just docx-libreoffice` for better results (requires LibreOffice)
+- Or use online PDF to DOCX converters (Adobe, SmallPDF, etc.)
+- Best practice: use PDF as primary format, DOCX only when required
 
 ## Requirements Summary
 
