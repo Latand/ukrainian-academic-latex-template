@@ -55,32 +55,53 @@ claude --version
 
 **Ubuntu/Debian:**
 ```bash
-sudo apt install texlive-full just
+sudo apt install texlive-full
 ```
 
 **Arch:**
 ```bash
-sudo pacman -S texlive-full just
+sudo pacman -S texlive-full
 ```
 
 **macOS:**
 ```bash
-brew install --cask mactex && brew install just
+brew install --cask mactex
 ```
 
 **Windows:**
 - Install [MiKTeX](https://miktex.org/download)
-- Install Just: `winget install Casey.Just`
+
+### 4. Install Just (optional)
+
+[Just](https://just.systems) is a command runner. Optional but convenient.
+
+```bash
+# Ubuntu/Debian
+sudo apt install just
+
+# Arch
+sudo pacman -S just
+
+# macOS
+brew install just
+
+# Windows
+winget install Casey.Just
+```
 
 ## Commands
 
+With Just:
 ```
-just build        - Compile to PDF (local LaTeX)
-just docker-build - Compile to PDF (Docker)
+just build        - Compile to PDF
+just docker-build - Compile in Docker
 just clean        - Remove build artifacts
-just open         - Open PDF in viewer
-just watch        - Auto-rebuild on changes
 just view         - Build and open
+```
+
+Without Just:
+```bash
+latexmk -lualatex -f main.tex && mkdir -p pdf && mv main.pdf pdf/
 ```
 
 ## Project Structure
