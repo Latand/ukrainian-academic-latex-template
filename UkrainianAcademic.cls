@@ -47,10 +47,14 @@
 \LoadClass{\baseclass}
 
 % === FONTS ===
-% Uses Times New Roman as required by Ukrainian academic standards
-% Change \setmainfont{...} to use a different font
+% Uses Times New Roman or Liberation Serif (free alternative)
+% Liberation Serif is used in CI/Docker environments
 \RequirePackage{fontspec}
-\setmainfont{Times New Roman}
+\IfFontExistsTF{Times New Roman}{
+    \setmainfont{Times New Roman}
+}{
+    \setmainfont{Liberation Serif}
+}
 
 % === LINE SPACING ===
 % 1.5 spacing is standard for Ukrainian academic documents

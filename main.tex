@@ -27,7 +27,12 @@
 \usepackage{polyglossia}
 \setdefaultlanguage{ukrainian}
 \setotherlanguage{english}
-\newfontfamily\cyrillicfonttt{Times New Roman}[Script=Cyrillic]
+% Cyrillic font: Times New Roman or Liberation Serif (CI/Docker)
+\IfFontExistsTF{Times New Roman}{
+    \newfontfamily\cyrillicfonttt{Times New Roman}[Script=Cyrillic]
+}{
+    \newfontfamily\cyrillicfonttt{Liberation Serif}[Script=Cyrillic]
+}
 
 % === TYPOGRAPHY ===
 \usepackage{microtype}

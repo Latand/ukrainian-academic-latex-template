@@ -1,5 +1,5 @@
 # Ukrainian Academic Document Template
-# Build commands for LaTeX compilation and conversion
+# Minimal build: LaTeX → PDF
 
 # Default recipe - build PDF
 default: build
@@ -9,33 +9,6 @@ build:
     latexmk -lualatex -f main.tex
     mkdir -p pdf
     mv main.pdf pdf/
-
-# Convert to Word document (.docx) using Pandoc
-# NOTE: Pandoc conversion is limited - complex formatting will be lost
-# For best results, use PDF as primary output or convert PDF via LibreOffice
-docx: build
-    @echo "Converting to DOCX (basic content only)..."
-    @echo "NOTE: Complex formatting will be lost. Use PDF for proper layout."
-    pandoc main.tex -o pdf/main.docx \
-        --bibliography=refs.bib \
-        --citeproc \
-        -f latex \
-        -t docx
-    @echo "Created: pdf/main.docx"
-
-# Convert PDF to DOCX via LibreOffice (better quality)
-docx-libreoffice: build
-    #!/bin/bash
-    if ! command -v libreoffice &> /dev/null; then
-        echo "ERROR: LibreOffice not installed."
-        echo "Install with: sudo apt install libreoffice  (Debian/Ubuntu)"
-        echo "          or: sudo pacman -S libreoffice    (Arch)"
-        echo "          or: brew install --cask libreoffice (macOS)"
-        exit 1
-    fi
-    echo "Converting PDF to DOCX via LibreOffice..."
-    libreoffice --headless --convert-to docx --outdir pdf pdf/main.pdf
-    echo "Created: pdf/main.docx"
 
 # Clean all build artifacts
 clean:
@@ -59,21 +32,17 @@ watch:
 # Build and open
 view: build open
 
-# Run setup script to install dependencies
-setup:
-    @chmod +x setup.sh
-    @./setup.sh
+# Build in Docker (no local LaTeX needed)
+docker-build:
+    docker build -t ukrainian-latex .
+    docker run --rm -v "$(pwd)/pdf:/output" ukrainian-latex
 
 # Show available commands
 help:
-    @echo "Available commands:"
-    @echo "  just build           - Compile LaTeX to PDF (recommended)"
-    @echo "  just docx            - Convert to DOCX via Pandoc (basic)"
-    @echo "  just docx-libreoffice - Convert PDF to DOCX via LibreOffice (better)"
-    @echo "  just clean           - Remove build artifacts"
-    @echo "  just open            - Open PDF in viewer"
-    @echo "  just watch           - Auto-rebuild on changes"
-    @echo "  just view            - Build and open"
-    @echo "  just setup           - Install dependencies"
-    @echo ""
-    @echo "Note: DOCX conversion loses formatting. Use PDF as primary output."
+    @echo "Commands:"
+    @echo "  just build        - Compile LaTeX to PDF"
+    @echo "  just docker-build - Build in Docker (no local LaTeX)"
+    @echo "  just clean        - Remove build artifacts"
+    @echo "  just open         - Open PDF in viewer"
+    @echo "  just watch        - Auto-rebuild on changes"
+    @echo "  just view         - Build and open"

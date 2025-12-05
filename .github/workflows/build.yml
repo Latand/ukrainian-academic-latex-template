@@ -1,0 +1,96 @@
+name: Build PDF
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Docker build (fastest, most reproducible)
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build in Docker
+        run: |
+          docker build -t ukrainian-latex .
+          mkdir -p pdf
+          docker run --rm -v "$(pwd)/pdf:/output" ukrainian-latex
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-docker
+          path: pdf/main.pdf
+
+  # Native Ubuntu
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-full fonts-liberation
+
+      - name: Build PDF
+        run: |
+          latexmk -lualatex -f main.tex
+          mkdir -p pdf && mv main.pdf pdf/
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-ubuntu
+          path: pdf/main.pdf
+
+  # macOS
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MacTeX
+        run: |
+          brew install --cask mactex-no-gui
+          eval "$(/usr/libexec/path_helper)"
+          echo "/Library/TeX/texbin" >> $GITHUB_PATH
+
+      - name: Build PDF
+        run: |
+          latexmk -lualatex -f main.tex
+          mkdir -p pdf && mv main.pdf pdf/
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-macos
+          path: pdf/main.pdf
+
+  # Windows
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MiKTeX
+        run: |
+          choco install miktex -y
+          refreshenv
+
+      - name: Build PDF
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\Program Files\MiKTeX\miktex\bin\x64;" + $env:PATH
+          latexmk -lualatex -f main.tex
+          New-Item -ItemType Directory -Force -Path pdf
+          Move-Item main.pdf pdf/
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-windows
+          path: pdf/main.pdf
