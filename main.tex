@@ -1,0 +1,114 @@
+% ===============================================================
+%  Ukrainian Academic Document Template
+%  Compile with: lualatex + biber
+% ===============================================================
+
+\documentclass[
+  12pt,
+  oneside,
+  headsepline,
+  onehalfspacing,
+  chapterinoneline
+]{UkrainianAcademic}
+
+% === CONFIGURE YOUR DOCUMENT HERE ===
+\thesistitle{Назва вашого документа}
+\author{Прізвище Ім'я По батькові}
+\supervisor{д.т.н., проф. Прізвище І.П.}
+\university{Назва університету}
+\faculty{Назва факультету}
+\department{Назва кафедри}
+\specialty{000 Назва спеціальності}
+\keywords{ключове слово 1, ключове слово 2, ключове слово 3}
+\keywordseng{keyword 1, keyword 2, keyword 3}
+% =====================================
+
+% === LANGUAGE SUPPORT ===
+\usepackage{polyglossia}
+\setdefaultlanguage{ukrainian}
+\setotherlanguage{english}
+\newfontfamily\cyrillicfonttt{Times New Roman}[Script=Cyrillic]
+
+% === TYPOGRAPHY ===
+\usepackage{microtype}
+\emergencystretch=3em
+\setlength{\parindent}{1.25cm}
+
+% === MATH AND TABLES ===
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{array}
+
+% === LISTS ===
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=1.25cm}
+
+% === CHAPTER FORMATTING ===
+\usepackage{titlesec}
+\titleformat{\chapter}{\Large\bfseries\centering}
+  {\MakeUppercase{РОЗДІЛ~\thechapter.}}{1em}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{0.5\baselineskip}
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+
+% === TEXT QUALITY ===
+\tolerance=1000
+\hbadness=10000
+\vbadness=10000
+\hyphenpenalty=50
+\exhyphenpenalty=50
+\doublehyphendemerits=10000
+\finalhyphendemerits=5000
+
+% === BIBLIOGRAPHY ===
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none,
+  maxbibnames=10,
+  giveninits=true
+]{biblatex}
+\addbibresource{refs.bib}
+
+% Ukrainian bibliography strings
+\DeclareFieldFormat{url}{\bibstring{url}\addcolon\space\url{#1}}
+\DeclareFieldFormat{doi}{DOI:\space\url{https://doi.org/#1}}
+\DefineBibliographyStrings{ukrainian}{
+  url={URL},
+  and={та},
+}
+
+% === PDF METADATA ===
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={\ttitle},
+  pdfauthor={\authorname},
+  pdfsubject={},
+  pdfkeywords={\keywordnames},
+  hidelinks
+}
+
+% ===============================================================
+%  DOCUMENT CONTENT
+% ===============================================================
+
+\begin{document}
+
+% --- Title page ---
+\input{frontmatter/titlepage}
+
+% --- Table of contents ---
+\tableofcontents
+
+% --- Main content ---
+\input{chapters/introduction}
+\input{chapters/chapter1}
+% Add more chapters here:
+% \input{chapters/chapter2}
+% \input{chapters/chapter3}
+\input{chapters/conclusions}
+
+% --- Bibliography ---
+\printbibliography[heading=bibintoc, title={СПИСОК ВИКОРИСТАНИХ ДЖЕРЕЛ}]
+
+\end{document}

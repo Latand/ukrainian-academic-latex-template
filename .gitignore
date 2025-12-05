@@ -1,0 +1,73 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.lol
+*.idx
+*.ind
+*.ilg
+*.glg
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.glsdefs
+*.nav
+*.snm
+*.vrb
+
+# LaTeX temporary files
+*.tmp
+*~
+.*.swp
+.*.swo
+
+# BibTeX
+*.bib.bak
+*.bib.backup
+
+# Output directories
+compiled/
+
+# Build directories
+build/
+dist/
+_build/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+.directory
+
+# Editor specific files
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+\#*\#
+.\#*
+
+# Latexmk
+*.latexmk
+
+# Hyperref
+*.brf
+
+# Minted
+_minted*
+*.pyg
+
+# Generated docs
+*.docx
